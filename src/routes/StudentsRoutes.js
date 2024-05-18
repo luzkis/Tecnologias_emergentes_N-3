@@ -22,7 +22,7 @@ const StudentsRoutes = {
       element: <Create />
     },
     {
-      path: 'students/edit/:estudentId',
+      path: 'students/edit/:studentId',
       element: <Edit />
     }
   ]

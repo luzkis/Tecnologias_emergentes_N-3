@@ -1,23 +1,37 @@
-// project imports
 import { useState, useEffect } from 'react';
+import { LinearProgress } from '@mui/material';
+import { useParams } from 'react-router-dom';
 import TeacherFrom from './components/TeacherFrom';
 
 const Edit = () => {
-  const teachers = {
-    name: 'John',
-    lastName: 'Doe',
-    email: 'johndoe@example.com',
-    phone: '1234567890',
-    address: '123 Main Street',
-    age: 20,
-    gender: 'male',
-    typeDocument: 'passport',
-    typeSubject: 'machine_learning',
-    numberDocument: '328d32099203',
-    dateBirth: '2023-05-18'
-  };
+  const { teacherId } = useParams();
+  const [teacher, setTeacher] = useState(null);
 
-  return <TeacherFrom teacher={teachers} isEdit />;
+  useEffect(() => {
+    console.log('Id del docente:', teacherId);
+    const fetchData = async () => {
+      if (!teacherId) return; // Verificar si es undefing
+      try {
+        const response = await fetch(`http://localhost:9000/api/teachers/${teacherId}`);
+        if (response.ok) {
+          const data = await response.json();
+          setTeacher(data);
+        } else {
+          throw new Error('Error getting the data');
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    fetchData();
+  }, [teacherId]);
+
+  if (!teacher) {
+    return <LinearProgress />;
+  }
+
+  return <TeacherFrom teacher={teacher} isEdit />;
 };
 
 export default Edit;

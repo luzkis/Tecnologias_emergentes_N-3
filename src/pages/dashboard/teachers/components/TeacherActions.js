@@ -12,6 +12,9 @@ import { Link } from 'react-router-dom';
 const ITEM_HEIGHT = 48;
 
 const TeacherActions = ({ teachersId }) => {
+  // Convertir teacherId a un número si es una cadena
+  const id = typeof teachersId === 'string' ? parseInt(teachersId, 10) : teachersId;
+
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
 
@@ -20,6 +23,27 @@ const TeacherActions = ({ teachersId }) => {
   };
   const handleClose = () => {
     setAnchorEl(null);
+  };
+
+  const deleteTeacher = async () => {
+    try {
+      const response = await fetch(`http://localhost:9000/api/teachers/${teachersId}`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
+
+      const result = await response.json();
+      console.log('Success:', result);
+
+      // Refrescar la página
+      window.location.reload();
+    } catch (error) {
+      console.error('Error:', error);
+    }
+
+    handleClose();
   };
 
   return (
@@ -54,7 +78,7 @@ const TeacherActions = ({ teachersId }) => {
           Edit
         </MenuItem>
 
-        <MenuItem onClick={handleClose} disableRipple>
+        <MenuItem onClick={deleteTeacher} disableRipple>
           <DeleteOutlined style={{ marginRight: 10 }} />
           Delete
         </MenuItem>
@@ -64,7 +88,7 @@ const TeacherActions = ({ teachersId }) => {
 };
 
 TeacherActions.propTypes = {
-  teacherId: PropTypes.number
+  teachersId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired
 };
 
 export default TeacherActions;

@@ -1,14 +1,11 @@
+// Importar las dependencias necesarias
 import PropTypes from 'prop-types';
 import { Fragment, useState } from 'react';
-
-// mui-material
 import { IconButton, Menu, MenuItem } from '@mui/material';
-
 import { MoreOutlined, EditOutlined, DeleteOutlined } from '@ant-design/icons';
-
-// react-router-dom
 import { Link } from 'react-router-dom';
 
+// Definir el componente StudentActions
 const ITEM_HEIGHT = 48;
 
 const StudentActions = ({ studentId }) => {
@@ -20,6 +17,27 @@ const StudentActions = ({ studentId }) => {
   };
   const handleClose = () => {
     setAnchorEl(null);
+  };
+
+  const deleteStudent = async () => {
+    // Cerrar modal
+    try {
+      const response = await fetch(`http://localhost:9000/api/students/${studentId}`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
+
+      const result = await response.json();
+      console.log('Success:', result);
+
+      // Refrescar la página
+      window.location.reload();
+    } catch (error) {
+      console.error('Error:', error);
+    }
+    handleClose();
   };
 
   return (
@@ -54,7 +72,7 @@ const StudentActions = ({ studentId }) => {
           Edit
         </MenuItem>
 
-        <MenuItem onClick={handleClose} disableRipple>
+        <MenuItem onClick={deleteStudent} disableRipple>
           <DeleteOutlined style={{ marginRight: 10 }} />
           Delete
         </MenuItem>
@@ -63,8 +81,10 @@ const StudentActions = ({ studentId }) => {
   );
 };
 
+// Definir los PropTypes del componente
 StudentActions.propTypes = {
-  studentId: PropTypes.number
+  studentId: PropTypes.oneOfType([PropTypes.string, PropTypes.number])
 };
 
+// Exportar el componente StudentActions
 export default StudentActions;

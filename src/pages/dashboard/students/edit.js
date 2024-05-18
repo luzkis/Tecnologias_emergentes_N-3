@@ -1,21 +1,35 @@
-// project imports
 import { useState, useEffect } from 'react';
+import { LinearProgress } from '@mui/material';
+import { useParams } from 'react-router-dom';
 import StudentForm from './components/studentForm';
 
 const Edit = () => {
-  const student = {
-    name: 'John',
-    lastName: 'Doe',
-    email: 'johndoe@example.com',
-    phone: '1234567890',
-    address: '123 Main Street',
-    age: 20,
-    gender: 'male',
-    typeDocument: 'passport',
-    typeSubject: 'machine_learning',
-    numberDocument: '328d32099203',
-    dateBirth: '2023-05-18'
-  };
+  const { studentId } = useParams();
+  const [student, setStudent] = useState(null);
+
+  useEffect(() => {
+    console.log('Id del estudiante::', studentId);
+    const fetchData = async () => {
+      if (!studentId) return; // Verificar si studentId es undefined
+      try {
+        const response = await fetch(`http://localhost:9000/api/students/${studentId}`);
+        if (response.ok) {
+          const data = await response.json();
+          setStudent(data);
+        } else {
+          throw new Error('Error getting the data');
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    fetchData();
+  }, [studentId]);
+
+  if (!student) {
+    return <LinearProgress />;
+  }
 
   return <StudentForm student={student} isEdit />;
 };

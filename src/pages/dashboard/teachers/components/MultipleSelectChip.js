@@ -14,37 +14,36 @@ export default function MultipleSelectChip() {
   };
 
   return (
-    <div>
-      <FormControl sx={{ m: 1, width: 300 }}>
-        <InputLabel id="demo-multiple-chip-label">Chip</InputLabel>
-        <Select
-          labelId="demo-multiple-chip-label"
-          id="demo-multiple-chip"
-          multiple
-          value={personName}
-          onChange={handleChange}
-          input={<OutlinedInput id="select-multiple-chip" label="Chip" />}
-          renderValue={(selected) => (
-            <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
-              {selected.map((value) => (
-                <Chip key={value} label={value} />
-              ))}
-            </Box>
-          )}
-        >
-          {names.map((name) => (
-            <MenuItem
-              key={name}
-              value={name}
-              style={{
-                fontWeight: personName.indexOf(name) !== -1 ? theme.typography.fontWeightMedium : theme.typography.fontWeightRegular
-              }}
-            >
-              {name}
-            </MenuItem>
-          ))}
-        </Select>
-      </FormControl>
-    </div>
+    <FormControl fullWidth sx={{ m: 1 }}>
+      <InputLabel id="demo-multiple-chip-label">Chip</InputLabel>
+      <Select
+        labelId="demo-multiple-chip-label"
+        id="demo-multiple-chip"
+        multiple
+        value={personName}
+        onChange={handleChange}
+        input={<OutlinedInput id="select-multiple-chip" label="Chip" />}
+        renderValue={(selected) => (
+          <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
+            {selected.map((value) => (
+              <Chip key={value} label={value} />
+            ))}
+          </Box>
+        )}
+        autoWidth // Ajusta el ancho del Select automáticamente
+      >
+        {names.map((name) => (
+          <MenuItem
+            key={name}
+            value={name}
+            style={{
+              fontWeight: personName.indexOf(name) !== -1 ? theme.typography.fontWeightMedium : theme.typography.fontWeightRegular
+            }}
+          >
+            {name}
+          </MenuItem>
+        ))}
+      </Select>
+    </FormControl>
   );
 }
